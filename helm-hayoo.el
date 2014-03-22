@@ -10,9 +10,11 @@
   "Url used to query hayoo, must have a `%s' placeholder.")
 
 (defun helm-hayoo-make-query (query)
+  "Returns a valid query for hayoo, searching for QUERY."
   (format helm-hayoo-query-url query))
 
 (defun helm-hayoo-search ()
+  "Search hayoo for current `helm-pattern'."
   (mapcar
    (lambda (result) (cons (helm-hayoo-format-result result) result))
    (append
@@ -24,6 +26,7 @@
        (json-read-object))) nil)))
 
 (defun helm-hayoo-format-result (result)
+  "Format a json response for display in helm."
   (let ((package (assoc-default 'package result))
         (signature (assoc-default 'signature result))
         (name (assoc-default 'name result))
@@ -31,6 +34,7 @@
     (format "(%s) %s %s :: %s" package module name signature)))
 
 (defvar helm-source-hayoo
+  "Helm source for searching hayoo."
   '((name . "Hayoo")
     (volatile)
     (requires-pattern . 2)
@@ -41,6 +45,7 @@
     (candidates . helm-hayoo-search)))
 
 (defun helm-hayoo ()
+  "Preconfigured helm to search hajoo."
   (interactive)
   (helm :sources '(helm-source-hayoo)))
 
