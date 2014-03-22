@@ -6,8 +6,8 @@
 
 ;;; Code:
 (defvar helm-hayoo-query-url
-  "Url used to query hayoo, must have a `%s' placeholder."
-  "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s")
+  "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s"
+  "Url used to query hayoo, must have a `%s' placeholder.")
 
 (defun helm-hayoo-make-query (query)
   (format helm-hayoo-query-url query))
