@@ -120,6 +120,7 @@
     (candidates . helm-hayoo-search))
   "Helm source for searching hayoo.")
 
+;;;###autoload
 (defun helm-hayoo ()
   "Preconfigured helm to search hayoo."
   (interactive)
