@@ -45,12 +45,15 @@
   (mapcar
    (lambda (result) (cons (helm-hayoo-format-result result) result))
    (append
-    (assoc-default
-     'functions
-     (with-current-buffer
+    (assoc-default 'functions (helm-hayoo-do-search helm-pattern))
+    nil)))
+
+(defun helm-hayoo-do-search (query)
+  "Retrieve json response for search QUERY from hayoo."
+  (with-current-buffer
          (url-retrieve-synchronously
-          (helm-hayoo-make-query helm-pattern))
-       (json-read-object))) nil)))
+          (helm-hayoo-make-query (url-encode-url query)))
+       (json-read-object)))
 
 (defun helm-hayoo-format-result (result)
   "Format a json response for display in helm."
