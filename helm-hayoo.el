@@ -1,10 +1,37 @@
-;;; helm-hayoo.el --- Source and configured helm for searching hayoo:
+;;; helm-hayoo.el --- Source and configured helm for searching hayoo.
+
+;; Copyright (C) 2014 Markus Hauck
+
+;; Author: Markus Hauck <markus1189@gmail.com>
+;; Maintainer: Markus Hauck <markus1189@gmail.com>
+;; Keywords: helm
+;; Version: 0.0.1
+;; Package-requires: ((helm "20140322") (json "1.4"))
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+;;
 ;; This package provides a helm source `helm-source-hayoo' and a
 ;; configured helm `helm-hayoo' to search hayoo online.
+;;
 
 ;;; Code:
+
+(require 'helm)
+(require 'json)
+
 (defvar helm-hayoo-query-url
   "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s"
   "Url used to query hayoo, must have a `%s' placeholder.")
@@ -34,7 +61,6 @@
     (format "(%s) %s %s :: %s" package module name signature)))
 
 (defvar helm-source-hayoo
-  "Helm source for searching hayoo."
   '((name . "Hayoo")
     (volatile)
     (requires-pattern . 2)
@@ -42,7 +68,8 @@
                                   (progn (insert (assoc-default 'name e))
                                          (message (helm-hayoo-format-result e)))))
                ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))))
-    (candidates . helm-hayoo-search)))
+    (candidates . helm-hayoo-search))
+  "Helm source for searching hayoo.")
 
 (defun helm-hayoo ()
   "Preconfigured helm to search hajoo."
@@ -50,3 +77,4 @@
   (helm :sources '(helm-source-hayoo)))
 
 (provide 'helm-hayoo)
+;;; helm-hayoo.el ends here
