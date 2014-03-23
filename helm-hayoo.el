@@ -41,6 +41,21 @@
 passed beforehand to `url-encode-url'."
   (format helm-hayoo-query-url (url-encode-url query)))
 
+(defun helm-hayoo-action-import (item)
+  (if (not (equal 'haskell-mode major-mode))
+      (message "Can't import if not in haskell-mode buffer.")
+    (save-excursion
+      (goto-char (point-min))
+      (haskell-navigate-imports)
+      (insert (concat (helm-hayoo-format-item-for-import item) "\n"))
+      (haskell-sort-imports)
+      (haskell-align-imports))))
+
+(defun helm-hayoo-format-item-for-import (item)
+  (let ((module (assoc-default 'module item))
+        (name (assoc-default 'name item)))
+    (format "import %s (%s)" module name)))
+
 (defun helm-hayoo-search ()
   "Search hayoo for current `helm-pattern'."
   (mapcar (lambda (result) (cons (helm-hayoo-format-result result) result))
@@ -69,7 +84,8 @@ passed beforehand to `url-encode-url'."
                                   (progn (insert (assoc-default 'name e))
                                          (message (helm-hayoo-format-result e)))))
                ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))
-               ("Browse haddock" . (lambda (e) (browse-url (assoc-default 'uri e))))))
+               ("Browse haddock" . (lambda (e) (browse-url (assoc-default 'uri e))))
+               ("Import this" . helm-hayoo-action-import)))
     (candidates . helm-hayoo-search)
     (delayed . 0.5))
   "Helm source for searching hayoo.")
