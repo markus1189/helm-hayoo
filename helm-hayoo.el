@@ -37,22 +37,20 @@
   "Url used to query hayoo, must have a `%s' placeholder.")
 
 (defun helm-hayoo-make-query (query)
-  "Returns a valid query for hayoo, searching for QUERY."
-  (format helm-hayoo-query-url query))
+  "Returns a valid query for hayoo, searching for QUERY, which is
+passed beforehand to `url-encode-url'."
+  (format helm-hayoo-query-url (url-encode-url query)))
 
 (defun helm-hayoo-search ()
   "Search hayoo for current `helm-pattern'."
-  (mapcar
-   (lambda (result) (cons (helm-hayoo-format-result result) result))
-   (append
-    (assoc-default 'functions (helm-hayoo-do-search helm-pattern))
-    nil)))
+  (mapcar (lambda (result) (cons (helm-hayoo-format-result result) result))
+          (append (assoc-default 'functions (helm-hayoo-do-search helm-pattern)) nil)))
 
 (defun helm-hayoo-do-search (query)
   "Retrieve json response for search QUERY from hayoo."
   (with-current-buffer
          (url-retrieve-synchronously
-          (helm-hayoo-make-query (url-encode-url query)))
+          (helm-hayoo-make-query query))
        (json-read-object)))
 
 (defun helm-hayoo-format-result (result)
@@ -70,7 +68,8 @@
     (action . (("Insert name" . (lambda (e)
                                   (progn (insert (assoc-default 'name e))
                                          (message (helm-hayoo-format-result e)))))
-               ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))))
+               ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))
+               ("Browse haddock" . (lambda (e) (browse-url (assoc-default 'uri e))))))
     (candidates . helm-hayoo-search))
   "Helm source for searching hayoo.")
 
