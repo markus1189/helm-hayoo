@@ -37,11 +37,11 @@
   "Url used to query hayoo, must have a `%s' placeholder.")
 
 (defun helm-hayoo-make-query (query)
-  "Returns a valid query for hayoo, searching for QUERY, which is
-passed beforehand to `url-encode-url'."
+  "Url encode and return a valid query for QUERY to hayoo."
   (format helm-hayoo-query-url (url-encode-url query)))
 
 (defun helm-hayoo-action-import (item)
+  "Insert a haskell import statement for ITEM."
   (if (not (equal 'haskell-mode major-mode))
       (message "Can't import if not in haskell-mode buffer.")
     (save-excursion
@@ -52,6 +52,7 @@ passed beforehand to `url-encode-url'."
       (haskell-align-imports))))
 
 (defun helm-hayoo-format-item-for-import (item)
+  "Format json parsed item ITEM for usage as a haskell import statement."
   (let ((module (assoc-default 'module item))
         (name (assoc-default 'name item)))
     (format "import %s (%s)" module name)))
@@ -69,7 +70,7 @@ passed beforehand to `url-encode-url'."
        (json-read-object)))
 
 (defun helm-hayoo-format-result (result)
-  "Format a json response for display in helm."
+  "Format json parsed response RESULT for display in helm."
   (let ((package (assoc-default 'package result))
         (signature (assoc-default 'signature result))
         (name (assoc-default 'name result))
