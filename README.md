@@ -1,4 +1,4 @@
 helm-hayoo
 ==========
 
-Source and configured helm for searching hayoo
+This package provides a helm source for searching hayoo.

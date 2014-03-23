@@ -1,4 +1,0 @@
-# helm-hayoo.el --- Source and configured helm for searching hayoo #
-
-This package provides a helm source `helm-source-hayoo' and a
-configured helm `helm-hayoo' to search hayoo online using helm.
