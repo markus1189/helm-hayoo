@@ -70,7 +70,8 @@ passed beforehand to `url-encode-url'."
                                          (message (helm-hayoo-format-result e)))))
                ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))
                ("Browse haddock" . (lambda (e) (browse-url (assoc-default 'uri e))))))
-    (candidates . helm-hayoo-search))
+    (candidates . helm-hayoo-search)
+    (delayed . 0.5))
   "Helm source for searching hayoo.")
 
 (defun helm-hayoo ()
