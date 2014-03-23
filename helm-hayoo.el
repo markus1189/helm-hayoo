@@ -40,23 +40,6 @@
   "Url encode and return a valid query for QUERY to hayoo."
   (format helm-hayoo-query-url (url-encode-url query)))
 
-(defun helm-hayoo-action-import (item)
-  "Insert a haskell import statement for ITEM."
-  (if (not (equal 'haskell-mode major-mode))
-      (message "Can't import if not in haskell-mode buffer.")
-    (save-excursion
-      (goto-char (point-min))
-      (haskell-navigate-imports)
-      (insert (concat (helm-hayoo-format-item-for-import item) "\n"))
-      (haskell-sort-imports)
-      (haskell-align-imports))))
-
-(defun helm-hayoo-format-item-for-import (item)
-  "Format json parsed item ITEM for usage as a haskell import statement."
-  (let ((module (assoc-default 'module item))
-        (name (assoc-default 'name item)))
-    (format "import %s (%s)" module name)))
-
 (defun helm-hayoo-search ()
   "Search hayoo for current `helm-pattern'."
   (mapcar (lambda (result) (cons (helm-hayoo-format-result result) result))
@@ -77,15 +60,43 @@
         (module (assoc-default 'module result)))
     (format "(%s) %s %s :: %s" package module name signature)))
 
+(defun helm-hayoo-action-insert-name (item)
+  "Insert name of ITEM at point."
+  (insert (assoc-default 'name item))
+  (message (helm-hayoo-format-result item)))
+
+(defun helm-hayoo-action-browse-haddock (item)
+  "Browse haddock for ITEM."
+  (browse-url (assoc-default 'uri item)))
+
+(defun helm-hayoo-action-kill-name (item)
+  "Kill the name of ITEM."
+  (kill-new (assoc-default 'name item)))
+
+(defun helm-hayoo-action-import (item)
+  "Insert a haskell import statement for ITEM."
+  (if (not (equal 'haskell-mode major-mode))
+      (message "Can't import if not in haskell-mode buffer.")
+    (save-excursion
+      (goto-char (point-min))
+      (haskell-navigate-imports)
+      (insert (concat (helm-hayoo-format-item-for-import item) "\n"))
+      (haskell-sort-imports)
+      (haskell-align-imports))))
+
+(defun helm-hayoo-format-item-for-import (item)
+  "Format json parsed item ITEM for usage as a haskell import statement."
+  (let ((module (assoc-default 'module item))
+        (name (assoc-default 'name item)))
+    (format "import %s (%s)" module name)))
+
 (defvar helm-source-hayoo
   '((name . "Hayoo")
     (volatile)
     (requires-pattern . 2)
-    (action . (("Insert name" . (lambda (e)
-                                  (progn (insert (assoc-default 'name e))
-                                         (message (helm-hayoo-format-result e)))))
-               ("Kill name" . (lambda (e) (kill-new (assoc-default 'name e))))
-               ("Browse haddock" . (lambda (e) (browse-url (assoc-default 'uri e))))
+    (action . (("Insert name" . helm-hayoo-action-insert-name)
+               ("Kill name" . helm-hayoo-action-kill-name)
+               ("Browse haddock" . helm-hayoo-action-browse-haddock)
                ("Import this" . helm-hayoo-action-import)))
     (candidates . helm-hayoo-search)
     (delayed . 0.5))
