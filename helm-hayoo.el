@@ -91,7 +91,7 @@ passed beforehand to `url-encode-url'."
   "Helm source for searching hayoo.")
 
 (defun helm-hayoo ()
-  "Preconfigured helm to search hajoo."
+  "Preconfigured helm to search hayoo."
   (interactive)
   (helm :sources '(helm-source-hayoo)))
 
