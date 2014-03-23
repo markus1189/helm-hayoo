@@ -49,7 +49,7 @@
      'functions
      (with-current-buffer
          (url-retrieve-synchronously
-          (helm-hayoo-make-query (car (split-string helm-pattern " "))))
+          (helm-hayoo-make-query helm-pattern))
        (json-read-object))) nil)))
 
 (defun helm-hayoo-format-result (result)
