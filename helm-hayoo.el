@@ -98,8 +98,7 @@
                ("Kill name" . helm-hayoo-action-kill-name)
                ("Browse haddock" . helm-hayoo-action-browse-haddock)
                ("Import this" . helm-hayoo-action-import)))
-    (candidates . helm-hayoo-search)
-    (delayed . 0.5))
+    (candidates . helm-hayoo-search))
   "Helm source for searching hayoo.")
 
 (defun helm-hayoo ()
