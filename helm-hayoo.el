@@ -1,4 +1,4 @@
-;;; helm-hayoo.el --- Source and configured helm for searching hayoo.
+;;; helm-hayoo.el --- Source and configured helm for searching hayoo
 
 ;; Copyright (C) 2014 Markus Hauck
 
@@ -6,7 +6,7 @@
 ;; Maintainer: Markus Hauck <markus1189@gmail.com>
 ;; Keywords: helm
 ;; Version: 0.0.1
-;; Package-requires: ((helm "20140322") (json "1.4"))
+;; Package-requires: ((helm "1.6.0") (json "1.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
