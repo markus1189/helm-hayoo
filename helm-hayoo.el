@@ -107,15 +107,11 @@
   "Try to match `helm-pattern' in the name of CANDIDATE."
   (string-match-p helm-pattern candidate))
 
-(defvar helm-hayoo-item-matcher '(helm-hayoo-matcher-name
-                                  (lambda (c) t))
-  "List of functions that are called by helm to determine if candidates match.")
-
 (defvar helm-source-hayoo
   `((name . "Hayoo")
     (volatile)
     (requires-pattern . 2)
-    (match . ,helm-hayoo-item-matcher)
+    (match . (helm-hayoo-matcher-name (lambda (c) t)))
     (action . (("Insert name" . helm-hayoo-action-insert-name)
                ("Kill name" . helm-hayoo-action-kill-name)
                ("Browse haddock" . helm-hayoo-action-browse-haddock)
