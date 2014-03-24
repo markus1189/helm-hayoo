@@ -94,8 +94,8 @@
       (goto-char (point-min))
       (haskell-navigate-imports)
       (insert (concat (helm-hayoo-format-item-for-import item) "\n"))
-      (haskell-sort-imports)
-      (haskell-align-imports))))
+      (if helm-hayoo-sort-imports (haskell-sort-imports))
+      (if helm-hayoo-align-imports (haskell-align-imports)))))
 
 (defun helm-hayoo-format-item-for-import (item)
   "Format json parsed item ITEM for usage as a haskell import statement."
