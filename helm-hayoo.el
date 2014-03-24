@@ -90,29 +90,19 @@
         (name (assoc-default 'name item)))
     (format "import %s (%s)" module name)))
 
-(defun helm-hayoo-matcher-name-word-boundary (candidate)
-  "Try to match `helm-pattern' in the name of CANDIDATE enclosed by word boundaries."
-  (string-match-p (concat "\\<" helm-pattern "\\>") (assoc-default 'name candidate)))
-
 (defun helm-hayoo-matcher-name (candidate)
   "Try to match `helm-pattern' in the name of CANDIDATE."
-  (string-match-p helm-pattern (assoc-default 'name candidate)))
+  (string-match-p helm-pattern candidate))
 
-(defun helm-hayoo-matcher-description (candidate)
-    "Try to match `helm-pattern' in the description of CANDIDATE."
-  (string-match-p helm-pattern (assoc-default 'description candidate)))
-
-(defvar helm-hayoo-item-matcher '(helm-hayoo-matcher-name-word-boundary
-                                  helm-hayoo-matcher-name
-                                  helm-hayoo-matcher-description
-                                  t)
+(defvar helm-hayoo-item-matcher '(helm-hayoo-matcher-name
+                                  (lambda (c) t))
   "List of functions that are called by helm to determine if candidates match.")
 
 (defvar helm-source-hayoo
-  '((name . "Hayoo")
+  `((name . "Hayoo")
     (volatile)
     (requires-pattern . 2)
-    (match . helm-hayoo-item-matcher)
+    (match . ,helm-hayoo-item-matcher)
     (action . (("Insert name" . helm-hayoo-action-insert-name)
                ("Kill name" . helm-hayoo-action-kill-name)
                ("Browse haddock" . helm-hayoo-action-browse-haddock)
