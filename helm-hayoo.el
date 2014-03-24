@@ -5,7 +5,7 @@
 ;; Author: Markus Hauck <markus1189@gmail.com>
 ;; Maintainer: Markus Hauck <markus1189@gmail.com>
 ;; Keywords: helm
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-requires: ((helm "1.6.0") (json "1.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -32,9 +32,22 @@
 (require 'helm)
 (require 'json)
 
-(defvar helm-hayoo-query-url
+(defgroup helm-hayoo nil
+  "Helm source for hayoo."
+  :group 'helm)
+
+(defcustom helm-hayoo-query-url
   "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s"
-  "Url used to query hayoo, must have a `%s' placeholder.")
+  "Url used to query hayoo, must have a `%s' placeholder."
+  :type 'string)
+
+(defcustom helm-hayoo-sort-imports t
+  "If non-nil, sort imports after adding a new one."
+  :type 'boolean)
+
+(defcustom helm-hayoo-align-imports t
+  "If non-nil, align imports after adding a new one."
+  :type 'boolean)
 
 (defun helm-hayoo-make-query (query)
   "Url encode and return a valid query for QUERY to hayoo."
