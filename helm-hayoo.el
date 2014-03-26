@@ -6,7 +6,7 @@
 ;; Maintainer: Markus Hauck <markus1189@gmail.com>
 ;; Keywords: helm
 ;; Version: 0.0.2
-;; Package-requires: ((helm "1.6.0") (json "1.2"))
+;; Package-requires: ((helm "1.6.0") (json "1.2") (haskell-mode "13.07"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -36,6 +36,10 @@
 
 (require 'helm)
 (require 'json)
+
+(require 'haskell-navigate-imports)
+(require 'haskell-sort-imports)
+(require 'haskell-align-imports)
 
 (defgroup helm-hayoo nil
   "Helm source for hayoo."
