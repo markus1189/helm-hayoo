@@ -58,14 +58,20 @@
   "If non-nil, align imports after adding a new one."
   :type 'boolean)
 
+(defvar helm-hayoo--nothing-found-indicator (cons "No results found." nil))
+
 (defun helm-hayoo-make-query (query)
   "Url encode and return a valid query for QUERY to hayoo."
   (format helm-hayoo-query-url (url-encode-url query)))
 
 (defun helm-hayoo-search ()
   "Search hayoo for current `helm-pattern'."
-  (mapcar (lambda (result) (cons (helm-hayoo-format-result result) result))
-          (append (assoc-default 'functions (helm-hayoo-do-search helm-pattern)) nil)))
+  (let ((results
+        (mapcar
+         (lambda (result) (cons (helm-hayoo-format-result result) result))
+         (append (assoc-default 'functions
+                                (helm-hayoo-do-search helm-pattern)) nil))))
+    (if results results helm-hayoo--nothing-found-indicator)))
 
 (defun helm-hayoo-do-search (query)
   "Retrieve json response for search QUERY from hayoo."
