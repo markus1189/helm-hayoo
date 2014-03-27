@@ -69,10 +69,11 @@
 
 (defun helm-hayoo-do-search (query)
   "Retrieve json response for search QUERY from hayoo."
-  (with-current-buffer
-         (url-retrieve-synchronously
-          (helm-hayoo-make-query query))
-       (json-read-object)))
+  (with-current-buffer (url-retrieve-synchronously (helm-hayoo-make-query query))
+    (goto-char (point-min))
+    (re-search-forward "^{" nil t)
+    (beginning-of-line)
+    (json-read-object)))
 
 (defun helm-hayoo-format-result (result)
   "Format json parsed response RESULT for display in helm."
