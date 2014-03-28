@@ -110,9 +110,52 @@
     (save-excursion
       (goto-char (point-min))
       (haskell-navigate-imports)
-      (insert (concat (helm-hayoo-format-item-for-import item) "\n"))
+      (helm-hayoo--insert-import-smart item)
       (if helm-hayoo-sort-imports (haskell-sort-imports))
       (if helm-hayoo-align-imports (haskell-align-imports)))))
+
+(defun helm-hayoo--first-import-pos ()
+  "Return point at the start of the first import line."
+  (save-excursion (beginning-of-buffer)
+                  (re-search-forward "^import " nil t)
+                  (beginning-of-line)
+                  (point)))
+
+(defun helm-hayoo--last-import-pos ()
+  "Return point at end of last import line."
+  (save-excursion (end-of-buffer)
+                  (re-search-backward "^import " nil t)
+                  (end-of-line)
+                  (point)))
+
+(defun helm-hayoo--insert-import-smart (item)
+  "Try to be smart about how to insert import for ITEM."
+  (let ((module (assoc-default 'module item))
+        (name (assoc-default 'name item))
+        (first-import-pos (helm-hayoo--first-import-pos))
+        (last-import-pos (helm-hayoo--last-import-pos)))
+    (goto-char first-import-pos)
+    (let ((module-imported
+           (re-search-forward
+            (format (rx bol "import" (regex "[[:space:]]+") "%s" (or word-end (group (0+ space) "("))) module)
+            last-import-pos t)))
+      (if module-imported
+          (helm-hayoo--import-add-to-list-or-resign module name)
+        (message "Not imported yet.")
+        (insert (concat (helm-hayoo-format-item-for-import item) "\n"))))))
+
+(defun helm-hayoo--import-add-to-list-or-resign (module name)
+  (let ((has-paren (progn
+                     (beginning-of-line)
+                     (search-forward "(" (line-end-position) t))))
+    (if (not has-paren)
+        t
+      (beginning-of-line)
+      (search-forward "(" (line-end-position) t)
+      (backward-char 1)
+      (forward-sexp)
+      (backward-char)
+      (insert (format ", %s" name)))))
 
 (defun helm-hayoo-format-item-for-import (item)
   "Format json parsed item ITEM for usage as a haskell import statement."
