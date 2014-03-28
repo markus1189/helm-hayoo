@@ -5,7 +5,7 @@
 ;; Author: Markus Hauck <markus1189@gmail.com>
 ;; Maintainer: Markus Hauck <markus1189@gmail.com>
 ;; Keywords: helm
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; Package-requires: ((helm "1.6.0") (json "1.2") (haskell-mode "13.07"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@
 ;;; Code:
 
 (require 'helm)
+(require 'helm-utils)
 (require 'json)
 
 (require 'haskell-navigate-imports)
@@ -123,6 +124,25 @@
   "Try to match `helm-pattern' in the name of CANDIDATE."
   (string-match-p helm-pattern candidate))
 
+(defun helm-hayoo-run-import-this ()
+  "Execute import action from `helm-source-hayoo'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-quit-and-execute-action 'helm-hayoo-action-import)))
+
+(defun helm-hayoo-run-browse-haddock ()
+  "Execute browse haddock action from `helm-source-hayoo'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-quit-and-execute-action 'helm-hayoo-action-browse-haddock)))
+
+(defvar helm-hayoo-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "C-c i") 'helm-hayoo-run-import-this)
+    (define-key map (kbd "C-c b") 'helm-hayoo-run-browse-haddock)
+    map))
+
 (defvar helm-source-hayoo
   `((name . "Hayoo")
     (volatile)
@@ -130,8 +150,9 @@
     (match . (helm-hayoo-matcher-name (lambda (c) t)))
     (action . (("Insert name" . helm-hayoo-action-insert-name)
                ("Kill name" . helm-hayoo-action-kill-name)
-               ("Browse haddock" . helm-hayoo-action-browse-haddock)
-               ("Import this" . helm-hayoo-action-import)))
+               ("Browse haddock (C-c b)" . helm-hayoo-action-browse-haddock)
+               ("Import this (C-c i)" . helm-hayoo-action-import)))
+    (keymap . ,helm-hayoo-map)
     (candidates . helm-hayoo-search))
   "Helm source for searching hayoo.")
 
