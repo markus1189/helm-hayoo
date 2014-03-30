@@ -116,14 +116,14 @@
 
 (defun helm-hayoo--first-import-pos ()
   "Return point at the start of the first import line."
-  (save-excursion (beginning-of-buffer)
+  (save-excursion (goto-char (point-min))
                   (re-search-forward "^import " nil t)
                   (beginning-of-line)
                   (point)))
 
 (defun helm-hayoo--last-import-pos ()
   "Return point at end of last import line."
-  (save-excursion (end-of-buffer)
+  (save-excursion (goto-char (point-max))
                   (re-search-backward "^import " nil t)
                   (end-of-line)
                   (point)))
