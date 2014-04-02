@@ -137,7 +137,7 @@
     (goto-char first-import-pos)
     (let ((module-imported
            (re-search-forward
-            (format (rx bol "import" (regex "[[:space:]]+") "%s" (or word-end (group (0+ space) "("))) module)
+            (format (rx bol "import" (regex "[[:space:]]+") "%s" (or eol (group (0+ space) "("))) module)
             last-import-pos t)))
       (if module-imported
           (helm-hayoo--import-add-to-list-or-resign module name)
