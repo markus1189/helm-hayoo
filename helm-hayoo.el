@@ -67,7 +67,6 @@
   :group 'helm-hayoo
   :type '(choice
           (function-item :tag "browse-url" :value browse-url)
-          (function-item :tag "w3m-haddock" :value w3m-haddock-display)
           (function :tag "Custom function")))
 
 (defvar helm-hayoo--nothing-found-indicator (cons "No results found." nil))
