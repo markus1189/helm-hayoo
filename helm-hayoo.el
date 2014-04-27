@@ -59,6 +59,14 @@
   "If non-nil, align imports after adding a new one."
   :type 'boolean)
 
+(defcustom helm-hayoo-browse-url 'browse-url
+  "Function used to open urls from `helm-hayoo'."
+  :group 'helm-hayoo
+  :type '(choice
+          (function-item :tag "browse-url" :value browse-url)
+          (function-item :tag "w3m-haddock" :value w3m-haddock-display)
+          (function :tag "Custom function")))
+
 (defvar helm-hayoo--nothing-found-indicator (cons "No results found." nil))
 
 (defun helm-hayoo-make-query (query)
@@ -97,7 +105,7 @@
 
 (defun helm-hayoo-action-browse-haddock (item)
   "Browse haddock for ITEM."
-  (browse-url (assoc-default 'uri item)))
+  (funcall helm-hayoo-browse-url (assoc-default 'uri item)))
 
 (defun helm-hayoo-action-kill-name (item)
   "Kill the name of ITEM."
