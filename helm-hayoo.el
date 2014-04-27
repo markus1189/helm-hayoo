@@ -49,14 +49,17 @@
 (defcustom helm-hayoo-query-url
   "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s"
   "Url used to query hayoo, must have a `%s' placeholder."
+  :group 'helm-hayoo
   :type 'string)
 
 (defcustom helm-hayoo-sort-imports t
   "If non-nil, sort imports after adding a new one."
+  :group 'helm-hayoo
   :type 'boolean)
 
 (defcustom helm-hayoo-align-imports t
   "If non-nil, align imports after adding a new one."
+  :group 'helm-hayoo
   :type 'boolean)
 
 (defcustom helm-hayoo-browse-url 'browse-url
