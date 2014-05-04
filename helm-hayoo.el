@@ -36,6 +36,7 @@
 
 (require 'helm)
 (require 'helm-utils)
+(require 'helm-help)
 (require 'json)
 
 (require 'haskell-navigate-imports)
@@ -194,7 +195,31 @@
     (set-keymap-parent map helm-map)
     (define-key map (kbd "C-c i") 'helm-hayoo-run-import-this)
     (define-key map (kbd "C-c b") 'helm-hayoo-run-browse-haddock)
+    (define-key map (kbd "C-c ?") 'helm-hayoo-help)
     map))
+
+(defvar helm-hayoo-help-message
+  "== Helm hayoo ==\
+\nSpecific commands for Helm hayoo:
+\\<helm-hayoo-map>\
+\\[helm-hayoo-run-import-this]\t\tImport the function and its module from this entry.
+\\[helm-hayoo-run-browse-haddock]\t\tBrowse haddock for this entry.
+\\[helm-hayoo-help]\t\tShow this help.
+\n== Helm Map ==
+\\{helm-map}")
+
+(defun helm-hayoo-help ()
+  "Display help for `helm-hayoo'."
+  (interactive)
+  (let ((helm-help-message helm-hayoo-help-message))
+    (helm-help)))
+
+(defvar helm-hayoo-mode-line-string '("Hayoo" "\
+\\<helm-hayoo-map>\
+\\[helm-hayoo-help]:Help \
+\\[helm-hayoo-run-import-this]:Import \
+\\[helm-hayoo-run-browse-haddock]:Browse haddock"
+  "Help string displayed in mode-line in `helm-hayoo'."))
 
 (defvar helm-source-hayoo
   `((name . "Hayoo")
@@ -206,7 +231,8 @@
                ("Browse haddock (C-c b)" . helm-hayoo-action-browse-haddock)
                ("Import this (C-c i)" . helm-hayoo-action-import)))
     (keymap . ,helm-hayoo-map)
-    (candidates . helm-hayoo-search))
+    (candidates . helm-hayoo-search)
+    (mode-line . helm-hayoo-mode-line-string))
   "Helm source for searching hayoo.")
 
 ;;;###autoload
