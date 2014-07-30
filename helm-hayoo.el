@@ -48,7 +48,7 @@
   :group 'helm)
 
 (defcustom helm-hayoo-query-url
-  "http://holumbus.fh-wedel.de/hayoo/hayoo.json?query=%s"
+  "http://hayoo.fh-wedel.de/json?query=%s"
   "Url used to query hayoo, must have a `%s' placeholder."
   :group 'helm-hayoo
   :type 'string)
@@ -81,7 +81,7 @@
   (let ((results
         (mapcar
          (lambda (result) (cons (helm-hayoo-format-result result) result))
-         (append (assoc-default 'functions
+         (append (assoc-default 'result
                                 (helm-hayoo-do-search helm-pattern)) nil))))
     (if results results helm-hayoo--nothing-found-indicator)))
 
@@ -95,24 +95,25 @@
 
 (defun helm-hayoo-format-result (result)
   "Format json parsed response RESULT for display in helm."
-  (let ((package (assoc-default 'package result))
-        (signature (assoc-default 'signature result))
-        (name (assoc-default 'name result))
-        (module (assoc-default 'module result)))
+  (let ((package (assoc-default 'resultPackage result))
+        (signature (assoc-default 'resultSignature result))
+        (name (assoc-default 'resultName result))
+        (module (assoc-default 'resultModules result)))
     (format "(%s) %s %s :: %s" package module name signature)))
 
 (defun helm-hayoo-action-insert-name (item)
   "Insert name of ITEM at point."
-  (insert (assoc-default 'name item))
+  (insert (assoc-default 'resultName item))
   (message (helm-hayoo-format-result item)))
 
 (defun helm-hayoo-action-browse-haddock (item)
   "Browse haddock for ITEM."
-  (funcall helm-hayoo-browse-url (assoc-default 'uri item)))
+  (message (assoc-default 'resultUri item))
+  (funcall helm-hayoo-browse-url (assoc-default 'resultUri item)))
 
 (defun helm-hayoo-action-kill-name (item)
   "Kill the name of ITEM."
-  (kill-new (assoc-default 'name item)))
+  (kill-new (assoc-default 'resultName item)))
 
 (defun helm-hayoo-action-import (item)
   "Insert a haskell import statement for ITEM."
@@ -141,8 +142,8 @@
 
 (defun helm-hayoo--insert-import-smart (item)
   "Try to be smart about how to insert import for ITEM."
-  (let ((module (assoc-default 'module item))
-        (name (assoc-default 'name item))
+  (let ((module (elt (assoc-default 'resultModules item) 0))
+        (name (assoc-default 'resultName item))
         (first-import-pos (helm-hayoo--first-import-pos))
         (last-import-pos (helm-hayoo--last-import-pos)))
     (goto-char first-import-pos)
@@ -170,8 +171,8 @@
 
 (defun helm-hayoo-format-item-for-import (item)
   "Format json parsed item ITEM for usage as a haskell import statement."
-  (let ((module (assoc-default 'module item))
-        (name (assoc-default 'name item)))
+  (let ((module (elt (assoc-default 'resultModules item) 0))
+        (name (assoc-default 'resultName item)))
     (format "import %s (%s)" module name)))
 
 (defun helm-hayoo-matcher-name (candidate)
@@ -216,10 +217,10 @@
 
 (defvar helm-hayoo-mode-line-string '("Hayoo" "\
 \\<helm-hayoo-map>\
-\\[helm-hayoo-help]:Help \
-\\[helm-hayoo-run-import-this]:Import \
-\\[helm-hayoo-run-browse-haddock]:Browse haddock"
-  "Help string displayed in mode-line in `helm-hayoo'."))
+\\[helm-hayoo-help]:Help|\
+\\[helm-hayoo-run-import-this]:Import|\
+\\[helm-hayoo-run-browse-haddock]:Browse haddock")
+  "Help string displayed in mode-line in `helm-hayoo'.")
 
 (defvar helm-source-hayoo
   `((name . "Hayoo")
