@@ -183,13 +183,13 @@
   "Execute import action from `helm-source-hayoo'."
   (interactive)
   (with-helm-alive-p
-    (helm-quit-and-execute-action 'helm-hayoo-action-import)))
+    (helm-exit-and-execute-action 'helm-hayoo-action-import)))
 
 (defun helm-hayoo-run-browse-haddock ()
   "Execute browse haddock action from `helm-source-hayoo'."
   (interactive)
   (with-helm-alive-p
-    (helm-quit-and-execute-action 'helm-hayoo-action-browse-haddock)))
+    (helm-exit-and-execute-action 'helm-hayoo-action-browse-haddock)))
 
 (defvar helm-hayoo-map
   (let ((map (make-sparse-keymap)))
